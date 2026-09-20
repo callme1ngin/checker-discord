@@ -122,6 +122,61 @@ npm run deploy:commands
 sudo systemctl restart silentchecker-discord
 ```
 
+## 6C. Запуск через Docker Compose
+
+Этот вариант удобно использовать, если на сервере уже есть другие боты в Docker.
+SilentChecker не открывает порты, поэтому не конфликтует с Telegram-ботом.
+
+Установи Docker, если он еще не установлен:
+
+```bash
+sudo apt update
+sudo apt install -y docker.io docker-compose-plugin
+sudo systemctl enable --now docker
+sudo usermod -aG docker $USER
+```
+
+После `usermod` перелогинься в SSH.
+
+Клонируй проект и создай `.env`:
+
+```bash
+cd /opt
+sudo git clone https://github.com/callme1ngin/checker-discord.git
+sudo chown -R $USER:$USER /opt/checker-discord
+cd /opt/checker-discord
+cp .env.example .env
+nano .env
+```
+
+Зарегистрируй slash-команды:
+
+```bash
+docker compose run --rm silentchecker-discord npm run deploy:commands
+```
+
+Запусти бота:
+
+```bash
+docker compose up -d --build
+```
+
+Логи:
+
+```bash
+docker compose logs -f silentchecker-discord
+```
+
+Обновление:
+
+```bash
+cd /opt/checker-discord
+git pull
+docker compose build --pull
+docker compose run --rm silentchecker-discord npm run deploy:commands
+docker compose up -d
+```
+
 ## Discord Portal
 
 Для ответов на обычные сообщения в канале включи:
