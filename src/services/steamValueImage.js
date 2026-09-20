@@ -118,7 +118,11 @@ function wrapText(text, maxChars, maxLines) {
   const lines = [];
   let current = "";
 
-  for (const word of words) {
+  for (let word of words) {
+    if (word.length > maxChars) {
+      word = `${word.slice(0, Math.max(0, maxChars - 3))}...`;
+    }
+
     const next = current ? `${current} ${word}` : word;
     if (next.length <= maxChars) {
       current = next;
@@ -190,7 +194,8 @@ function renderCard(item, imageDataUri, index) {
   const imageX = x + (CARD_WIDTH - IMAGE_WIDTH) / 2;
   const imageY = y + 10;
   const rarityColor = getRarityColor(item.rarity);
-  const titleLines = wrapText(item.title, 24, 2);
+  const titleLines = wrapText(item.title, 20, 2);
+  const titleClipId = `titleClip${index}`;
   const rarity = item.rarity || item.game || "Item";
   const priceParts = [formatUsd(item.price)];
 
@@ -204,12 +209,17 @@ function renderCard(item, imageDataUri, index) {
 
   return `
     <g>
+      <clipPath id="${titleClipId}">
+        <rect x="${x + 14}" y="${y + 198}" width="${CARD_WIDTH - 28}" height="42"/>
+      </clipPath>
       <rect x="${x}" y="${y}" width="${CARD_WIDTH}" height="${CARD_HEIGHT}" rx="8" fill="${PALETTE.card}" stroke="${PALETTE.cardStroke}" stroke-width="2" opacity="0.96"/>
       <rect x="${x + 10}" y="${y + 10}" width="${CARD_WIDTH - 20}" height="${CARD_HEIGHT - 20}" rx="6" fill="${PALETTE.cardInner}" opacity="0.74"/>
       ${imageMarkup}
       <rect x="${x + 14}" y="${y + 160}" width="${CARD_WIDTH - 28}" height="4" rx="2" fill="${rarityColor}"/>
       <text x="${x + 14}" y="${y + 189}" font-family="${FONT_FAMILY}" font-size="13" fill="${PALETTE.rarityText}" font-weight="700">${escapeXml(rarity)}</text>
-      ${renderTextLines(titleLines, x + 14, y + 211, { size: 14, fill: PALETTE.titleText, weight: "700", lineHeight: 17 })}
+      <g clip-path="url(#${titleClipId})">
+        ${renderTextLines(titleLines, x + 14, y + 211, { size: 13, fill: PALETTE.titleText, weight: "700", lineHeight: 16 })}
+      </g>
       <text x="${x + 14}" y="${y + 258}" font-family="${FONT_FAMILY}" font-size="18" fill="${PALETTE.priceText}" font-weight="800">${escapeXml(priceParts.join("  "))}</text>
     </g>
   `;
