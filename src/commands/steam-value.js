@@ -121,6 +121,7 @@ function createSteamValueEmbed(report, previousChecks, imageFilename) {
 
   const embed = new EmbedBuilder()
     .setColor(EMBED_COLOR)
+    .setTitle(report.steamId)
     .addFields(
       {
         name: `${DOTA_EMOJI} Dota 2`,
