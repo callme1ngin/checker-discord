@@ -10,7 +10,7 @@ const IMAGE_WIDTH = 196;
 const IMAGE_HEIGHT = 144;
 const IMAGE_TIMEOUT_MS = 12000;
 const IMAGE_SCALE = 2;
-const FONT_FAMILY = "Segoe UI, Inter, Arial, sans-serif";
+const FONT_FAMILY = "DejaVu Sans, Liberation Sans, Arial, sans-serif";
 const PALETTE = {
   page: "#030a28",
   pageGlow: "#061b64",
