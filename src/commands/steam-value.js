@@ -77,6 +77,15 @@ function formatResultValue(result) {
   return formatMoney(result.value.totalValue);
 }
 
+function getTotalItemCount(report) {
+  return report.results.reduce((sum, result) => {
+    if (!result.ok) return sum;
+
+    const count = Number(result.value.itemCount);
+    return Number.isFinite(count) ? sum + count : sum;
+  }, 0);
+}
+
 function createRequester(user, member) {
   return {
     userId: user.id,
@@ -118,10 +127,11 @@ function createSteamValueEmbed(report, previousChecks, imageFilename) {
   const dotaResult = getResultByGame(report, "dota2");
   const csResult = getResultByGame(report, "cs2");
   const history = formatHistory(previousChecks);
+  const totalItemCount = getTotalItemCount(report);
 
   const embed = new EmbedBuilder()
     .setColor(EMBED_COLOR)
-    .setFooter({ text: `SteamID64: ${report.steamId}` })
+    .setFooter({ text: `SteamID64: ${report.steamId}\nКол-во предметов: ${totalItemCount}` })
     .addFields(
       {
         name: `${DOTA_EMOJI} Dota 2`,
