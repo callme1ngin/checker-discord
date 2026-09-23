@@ -25,10 +25,10 @@ const RUST_EMOJI = "<:cc406a8382d8df7eb5f395ec884d3c95:1552328328856211489>";
 const TF2_EMOJI = "<:teamfortress2seeklogo:1552328725045968959>";
 const HISTORY_EMOJI = "<:57410timer:1551209394912624781>";
 const GAME_FIELDS = [
-  { key: "dota2", label: `${DOTA_EMOJI} Dota 2`, countLabel: DOTA_EMOJI },
-  { key: "cs2", label: `${CS2_EMOJI} CS2`, countLabel: CS2_EMOJI },
-  { key: "rust", label: `${RUST_EMOJI} Rust`, countLabel: RUST_EMOJI },
-  { key: "tf2", label: `${TF2_EMOJI} Team Fortress 2`, countLabel: TF2_EMOJI },
+  { key: "dota2", label: `${DOTA_EMOJI} Dota 2`, countLabel: "D2" },
+  { key: "cs2", label: `${CS2_EMOJI} CS2`, countLabel: "CS2" },
+  { key: "rust", label: `${RUST_EMOJI} Rust`, countLabel: "Rust" },
+  { key: "tf2", label: `${TF2_EMOJI} Team Fortress 2`, countLabel: "TF2" },
 ];
 
 function formatMoney(value) {
@@ -137,7 +137,7 @@ function createSteamValueEmbed(report, previousChecks, imageFilename) {
   }));
   const footerLines = [
     `SteamID64: ${report.steamId}`,
-    ...gameResults.map((game) => `Кол-во предметов ${game.countLabel}: ${getItemCount(game.result)}`),
+    ...gameResults.map((game) => `${game.countLabel} - ${getItemCount(game.result)} items`),
   ];
 
   const embed = new EmbedBuilder()
