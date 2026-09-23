@@ -22,6 +22,12 @@ const EMBED_COLOR = 0x00a8ff;
 const DOTA_EMOJI = "<:pngwingcom:1551207179137323028>";
 const CS2_EMOJI = "<:counterstrikeseeklogo:1551207380690145381>";
 const HISTORY_EMOJI = "<:57410timer:1551209394912624781>";
+const GAME_FIELDS = [
+  { key: "dota2", label: `${DOTA_EMOJI} Dota 2`, countLabel: "Dota 2" },
+  { key: "cs2", label: `${CS2_EMOJI} CS2`, countLabel: "CS2" },
+  { key: "rust", label: "Rust", countLabel: "Rust" },
+  { key: "tf2", label: "Team Fortress 2", countLabel: "Team Fortress 2" },
+];
 
 function formatMoney(value) {
   const amount = Number(value);
@@ -98,7 +104,7 @@ function createRequester(user, member) {
 }
 
 function getInventoryUrl(steamId) {
-  return `https://steamcommunity.com/profiles/${steamId}/inventory/#570_2`;
+  return `https://steamcommunity.com/profiles/${steamId}/inventory/`;
 }
 
 function formatCheckedAt(checkedAt) {
@@ -122,28 +128,27 @@ function formatHistory(checks) {
 }
 
 function createSteamValueEmbed(report, previousChecks, imageFilename) {
-  const dotaResult = getResultByGame(report, "dota2");
-  const csResult = getResultByGame(report, "cs2");
   const history = formatHistory(previousChecks);
-  const dotaItemCount = getItemCount(dotaResult);
-  const csItemCount = getItemCount(csResult);
+  const gameResults = GAME_FIELDS.map((game) => ({
+    ...game,
+    result: getResultByGame(report, game.key),
+  }));
+  const footerLines = [
+    `SteamID64: ${report.steamId}`,
+    ...gameResults.map((game) => `Кол-во предметов ${game.countLabel}: ${getItemCount(game.result)}`),
+  ];
 
   const embed = new EmbedBuilder()
     .setColor(EMBED_COLOR)
     .setFooter({
-      text: `SteamID64: ${report.steamId}\nКол-во предметов Dota 2: ${dotaItemCount}\nКол-во предметов CS2: ${csItemCount}`,
+      text: footerLines.join("\n"),
     })
     .addFields(
-      {
-        name: `${DOTA_EMOJI} Dota 2`,
-        value: formatResultValue(dotaResult),
+      gameResults.map((game) => ({
+        name: game.label,
+        value: formatResultValue(game.result),
         inline: true,
-      },
-      {
-        name: `${CS2_EMOJI} CS2`,
-        value: formatResultValue(csResult),
-        inline: true,
-      },
+      })),
     );
 
   if (history.length > 0) {

@@ -13,7 +13,21 @@ const GAMES = {
     appId: 730,
     showMyItemsGame: "cs2",
   },
+  rust: {
+    key: "rust",
+    name: "Rust",
+    appId: 252490,
+    showMyItemsGame: "rust",
+  },
+  tf2: {
+    key: "tf2",
+    name: "Team Fortress 2",
+    appId: 440,
+    showMyItemsGame: "tf2",
+  },
 };
+
+const DEFAULT_GAME_KEYS = ["dota2", "cs2", "rust", "tf2"];
 
 const DEFAULT_CURRENCY = "usd";
 const HTTP_TIMEOUT_MS = 30000;
@@ -448,7 +462,7 @@ async function scanSteamInventoryValue(options) {
   const currency = normalizeCurrency(options.currency);
   const lolzToken = options.lolzToken || "";
 
-  const gameKeys = gameMode === "both" ? ["dota2", "cs2"] : [gameMode];
+  const gameKeys = gameMode === "both" || gameMode === "all" ? DEFAULT_GAME_KEYS : [gameMode];
   const results = [];
 
   for (const gameKey of gameKeys) {
